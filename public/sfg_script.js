@@ -1031,3 +1031,39 @@ function sfg_undo(){
         disable_undo_btn(true);
     }
 }
+
+function export_sfg(){
+    export_sfg_request();
+}
+
+function import_sfg(){
+    import_sfg_request();
+}
+
+function export_sfg_request(params) {
+
+
+}
+
+function import_sfg_request(params) {
+
+    let url = new URL(`${baseUrl}/circuits/${circuitId}/export`)
+
+    fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        }, 
+        mode: 'cors',
+        credentials: 'same-origin',
+        body: JSON.stringify(params)
+    })
+    .then(response => response.json())
+    .then(data => {
+        update_frontend(data)
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
