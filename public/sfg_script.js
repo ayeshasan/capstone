@@ -1040,14 +1040,49 @@ function import_sfg(){
     import_sfg_request();
 }
 
-function export_sfg_request(params) {
+function export_sfg_request() {
+    // get current sfg, and export as json
 
+    let url = new URL(`${baseUrl}/circuits/${circuitId}`)
+    //url.searchParams.append("fields", fields)
+
+    fetch(url)
+        .then(response => {
+            return response.json()
+        })
+        .then(data => {
+            console.log(data);
+            download(JSON.stringify(data), "sfg_export");
+        })
+        .catch(error => {
+            console.log(error)
+        })
 
 }
 
+// Function to download data to a file
+function download(data, filename, type) {
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+}
+
+
 function import_sfg_request(params) {
 
-    let url = new URL(`${baseUrl}/circuits/${circuitId}/export`)
+    let url = new URL(`${baseUrl}/circuits/${circuitId}/import`)
 
     fetch(url, {
         method: 'PATCH',

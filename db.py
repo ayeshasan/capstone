@@ -520,3 +520,8 @@ class Circuit(Document):
         if len(self.sfg_stack) > 0:
             self.sfg = self.sfg_stack.pop()
 
+
+    # TODO currently don't need this
+    def export_sfg(self):
+        return self.sfg
+

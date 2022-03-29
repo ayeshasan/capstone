@@ -267,6 +267,32 @@ def undo_sfg(circuit_id):
     except Exception as e:
         abort(400, description=str(e))
 
+# TODO import needs implementation
+@app.route('/circuits/<circuit_id>/import', methods=['PATCH'])
+def import_sfg(circuit_id):
+    circuit = db.Circuit.objects(id=circuit_id).first()
+
+    if not circuit:
+        abort(404, description='Circuit not found')
+
+    try:
+        fields = request.args.get(
+            'fields',
+            type=lambda s: s and s.split(',') or None
+        )
+
+        return circuit.to_dict(fields)
+
+    except Exception as e:
+        abort(400, description=str(e))
+
+    #curr_sfg = circuit.sfg # if doesn't work try
+    #curr_sfg_2 = export_sfg()
+    #circuit.save()
+
+
+
+
 
 if __name__ == '__main__':
     app.run()
