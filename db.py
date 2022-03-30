@@ -522,7 +522,10 @@ class Circuit(Document):
 
 
     def get_current_sfg(self):
-        #return self.sfg
+        return self.deserialize_sfg()
+
+    # SFG binary field --> graph (json object)
+    def deserialize_sfg(self):
         output = {}
         sfg = dill.loads(self.sfg) # binary to obj (deserialization)
         freq = 2j * math.pi * sympy.Symbol('f')
@@ -545,6 +548,14 @@ class Circuit(Document):
 
         output['sfg'] = nx.cytoscape_data(sfg)
         return output
+
+    def import_sfg(self, sfg_obj):
+        # TODO make sfg_obj (dictionary obj) --> sfg graph obj
+
+        # serialize sfg graph obj to binary field and set to self.sfg
+        sfg_serialized = dill.dumps(sfg_graph_obj)
+        self.sfg = sfg_serialized
+
     
 
 

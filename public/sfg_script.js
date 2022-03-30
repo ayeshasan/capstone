@@ -401,12 +401,14 @@ function render_frontend(data) {
 
 
 // Update SFG and parameter panel
-function update_frontend(data) {
+function update_frontend(data, sfg_upload = false) {
     let curr_elements = edge_helper(data, symbolic_flag)
     // load SFG panel
     make_sfg(curr_elements)
     // load parameter panel
-    make_parameter_panel(data.parameters)
+    if (!sfg_upload){
+        make_parameter_panel(data.parameters)
+    }
 }
 
 
@@ -1043,10 +1045,6 @@ function export_sfg(){
     export_sfg_request();
 }
 
-function import_sfg(){
-    import_sfg_request();
-}
-
 function export_sfg_request() {
     // get current deserialized (non binary) sfg, and export as json
 
@@ -1057,7 +1055,7 @@ function export_sfg_request() {
             return response.json();
         })
         .then(data => {
-            console.log(data);
+            console.log("EXported json obj is: ", data);
             download(JSON.stringify(data), "SFG_deserialized");
         })
         .catch(error => {
@@ -1086,7 +1084,32 @@ function download(data, filename, type) {
 }
 
 
-function import_sfg_request(params) {
+function upload_sfg() {
+    // TODO add error checking (i.e. is file in correct json format)
+    var files = document.getElementById('upload_sfg').files;
+    console.log(files);
+    if (files.length <= 0) {
+        return false;
+    }
+
+    var fr = new FileReader();
+    var sfg_obj;
+    fr.onload = function(e) { 
+        console.log(e);
+        sfg_obj = JSON.parse(e.target.result);
+        // TODO alert() here
+        //var res_str = JSON.stringify(result, null, 2);
+        console.log("IMPORTED json obj is: ", sfg_obj)
+        //console.log(JSON.parse(JSON.stringify(sfg_obj.sfg.elements)))
+        // TODO connect to backend to convert sfg JSON to sfg graph and binary field
+        import_sfg_request(sfg_obj)
+    }
+
+    fr.readAsText(files.item(0));
+}
+
+
+function import_sfg_request(sfg_obj) {
 
     let url = new URL(`${baseUrl}/circuits/${circuitId}/import`)
 
@@ -1097,11 +1120,23 @@ function import_sfg_request(params) {
         }, 
         mode: 'cors',
         credentials: 'same-origin',
-        body: JSON.stringify(params)
+        body: JSON.stringify(sfg_obj)
     })
     .then(response => response.json())
     .then(data => {
-        update_frontend(data)
+        // TODO update_frontend(data);
+        //or update_frontend(sfg_obj, true); ?
+       
+        /*
+        data_json = JSON.parse(JSON.stringify(data));
+        data_json.sfg = sfg_obj;
+
+        console.log("modified data is: ");
+        console.log(data_json);
+        update_frontend(data_json); //buggy
+        */
+       
+        update_frontend(sfg_obj, true);
     })
     .catch(error => {
         console.log(error)

@@ -268,6 +268,7 @@ def undo_sfg(circuit_id):
         abort(400, description=str(e))
 
 
+# For SFG Export
 @app.route('/circuits/<circuit_id>/export', methods=['GET'])
 def get_sfg(circuit_id):
     circuit = db.Circuit.objects(id=circuit_id).first()
@@ -299,6 +300,12 @@ def import_sfg(circuit_id):
     if not circuit:
         abort(404, description='Circuit not found')
 
+    sfg_obj = request.json.get('sfg')
+    #print(sfg_obj) GOT JSON OBJ
+    # TODO
+    #circuit.import_sfg(sfg_obj)
+    # need circuit.save()?
+
     try:
         fields = request.args.get(
             'fields',
@@ -309,10 +316,6 @@ def import_sfg(circuit_id):
 
     except Exception as e:
         abort(400, description=str(e))
-
-    #curr_sfg = circuit.sfg # if doesn't work try
-    #curr_sfg_2 = export_sfg()
-    #circuit.save()
 
 
 
