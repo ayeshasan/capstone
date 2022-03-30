@@ -521,7 +521,30 @@ class Circuit(Document):
             self.sfg = self.sfg_stack.pop()
 
 
-    # TODO currently don't need this
-    def export_sfg(self):
-        return self.sfg
+    def get_current_sfg(self):
+        #return self.sfg
+        output = {}
+        sfg = dill.loads(self.sfg) # binary to obj (deserialization)
+        freq = 2j * math.pi * sympy.Symbol('f')
+
+        for src, dst in sfg.edges:
+            symbolic = sfg.edges[src, dst]['weight']
+
+            if isinstance(symbolic, sympy.Expr):
+                numeric = symbolic.subs('s', freq).subs(self.parameters)
+            else:
+                numeric = symbolic
+
+            magnitude, phase = cmath.polar(numeric)
+
+            sfg.edges[src, dst]['weight'] = {
+                'symbolic': sympy.latex(symbolic) if isinstance(symbolic, sympy.Expr) else str(symbolic),
+                'magnitude': magnitude,
+                'phase': phase*(180/cmath.pi)
+            }
+
+        output['sfg'] = nx.cytoscape_data(sfg)
+        return output
+    
+
 

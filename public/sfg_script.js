@@ -1048,18 +1048,17 @@ function import_sfg(){
 }
 
 function export_sfg_request() {
-    // get current sfg, and export as json
+    // get current deserialized (non binary) sfg, and export as json
 
-    let url = new URL(`${baseUrl}/circuits/${circuitId}`)
-    //url.searchParams.append("fields", fields)
+    let url = new URL(`${baseUrl}/circuits/${circuitId}/export`)
 
     fetch(url)
         .then(response => {
-            return response.json()
+            return response.json();
         })
         .then(data => {
             console.log(data);
-            download(JSON.stringify(data), "sfg_export");
+            download(JSON.stringify(data), "SFG_deserialized");
         })
         .catch(error => {
             console.log(error)
@@ -1077,7 +1076,7 @@ function download(data, filename, type) {
                 url = URL.createObjectURL(file);
         a.href = url;
         a.download = filename;
-        document.body.appendChild(a);
+        document.body.appendChild(a);   
         a.click();
         setTimeout(function() {
             document.body.removeChild(a);
