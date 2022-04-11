@@ -492,7 +492,10 @@ function display_mag_sfg() {
 
         updates[idx] = () => {
             edges[idx].update();
-            document.querySelector(`#edge-${idx}`).style.fontSize = cy.zoom()*16 + 'px';
+            edge = document.querySelector(`#edge-${idx}`);
+            if (edge) {
+                edge.style.fontSize = cy.zoom()*16 + 'px';
+            }
         }
           
         edge.connectedNodes().on('position', updates[idx]);
@@ -658,7 +661,7 @@ function sfg_simplify_request(params) {
         reset_mag_labels()
     })
     .catch(error => {
-        console.log(error)
+       console.log(error)
     })
 }
 
