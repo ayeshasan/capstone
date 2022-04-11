@@ -62,11 +62,17 @@
               <input type="range" step="any" min="1" max="10000" value="5000" class="custom-range" id="frequency-slider" style="width:400px;">
               <input class="frequency-range" type="text" placeholder="10000Hz" id="max-range">
               <span id="frequency-value"> </span> Hz
+              
               <input type="submit" value="Update Range" id="update-range">
-              <div id="frequency-form">
-                <h1> Frequency Range </h1>
-              </div>
+              <span id="frequency-form">
+                <!--<h1> Frequency Range </h1> -->
+              </span>
             </div>
+            <h1> SFG Save/Upload </h1>
+              <div style="height: 23px; margin-top: 10px;"> 
+                <button id="export-btn" style="margin-left: 20px; margin-right: 35px;" onclick="export_sfg()">Save SFG</button>
+                Upload SFG: <input type="file" id="upload_sfg" value="Import" onchange="upload_sfg()"/>
+              </div>
           </div>
           <div>
             <h1> SFG Manipulation </h1>
@@ -80,11 +86,7 @@
               <input type="checkbox" id="path-highlight-toggle" onclick="path_highlight_toggle()"> Highlight Path
               <button id="rmv-hlt-btn" style="margin-left: 20px;" onclick="removeHighlight()">Remove Highlight</button>
           </div>
-          <h1> SFG Save/Upload </h1>
-          <div style="height: 23px; margin-top: 10px;"> 
-            <button id="export-btn" style="margin-left: 20px; margin-right: 35px;" onclick="export_sfg()">Save SFG</button>
-            Upload SFG: <input type="file" id="upload_sfg" value="Import" onchange="upload_sfg()"/>
-          </div>
+          
           <div class="sfg-section">
             <h1>SFG Simulation</h1>
             <div id="cy"></div>

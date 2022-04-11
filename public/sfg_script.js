@@ -932,6 +932,8 @@ function make_frequency_bounds() {
         }
     });
 
+    form.style.display = "inline"
+
     document.getElementById("frequency-form").appendChild(form)
 }
 
